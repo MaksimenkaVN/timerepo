@@ -16,17 +16,11 @@ pipeline {
 // docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 sh '''                
                   ls -la
-                  docker rmi maksimenkavn/time-app-api-dev
-                  docker rmi maksimenkavn/time-app-frontend-dev
-                  cd /time/time-app/frontend
-                  docker build -t maksimenkavn/time-app-frontend-dev .
-                  cd /time/time-app/api
-                  docker build -t maksimenkavn/time-app-api-dev .
+                  pwd                  
+                  docker build --file /time/time-app/frontend/Dockerfile -t maksimenkavn/time-app-frontend-dev .
+                  docker build --file /time/time-app/api/Dockerfile -t maksimenkavn/time-app-api-dev .
                   docker push maksimenkavn/time-app-api-dev
                   docker push maksimenkavn/time-app-frontend-dev
-                  cd ..
-                  cd ..
-                  cd ..                  
                   docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 '''
             }

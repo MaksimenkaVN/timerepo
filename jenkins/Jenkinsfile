@@ -12,9 +12,11 @@ pipeline {
             steps {
 //                dir('apps/hello-world-app') {
 //                    sh "mvn -B -DskipTests clean package"
- //               }
+//               }
+// docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 sh '''                
-                  docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+                  ls -la
+                  pwd
                 '''
             }
         }

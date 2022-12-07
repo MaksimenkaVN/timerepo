@@ -15,8 +15,7 @@ pipeline {
 //               }
 // docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 sh '''                
-                  ls -la
-                  pwd                  
+                  ls -la                  
                   docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 '''
             }

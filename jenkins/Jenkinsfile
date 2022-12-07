@@ -17,10 +17,6 @@ pipeline {
                 sh '''                
                   ls -la
                   pwd                  
-                  docker build --file ./time/time-app/frontend/Dockerfile -t maksimenkavn/time-app-frontend-dev .
-                  docker build --file ./time/time-app/api/Dockerfile -t maksimenkavn/time-app-api-dev .
-                  docker push maksimenkavn/time-app-api-dev
-                  docker push maksimenkavn/time-app-frontend-dev
                   docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 '''
             }

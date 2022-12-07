@@ -13,7 +13,9 @@ pipeline {
 //                dir('apps/hello-world-app') {
 //                    sh "mvn -B -DskipTests clean package"
  //               }
-                echo 'Prod'
+                sh '''                
+                  docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+                '''
             }
         }
     }

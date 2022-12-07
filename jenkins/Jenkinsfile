@@ -1,0 +1,25 @@
+pipeline {
+//    options {
+//        buildDiscarder(logRotator(numToKeepStr: '3'))
+//    }
+//    parameters {
+//        choice choices: ['slave', 'master', 'docker_build'], description: 'Select agent', name: 'agent'
+//    }
+    agent any
+
+    stages {
+        stage('Test') {
+            steps {
+//                dir('apps/hello-world-app') {
+//                    sh "mvn -B -DskipTests clean package"
+ //               }
+                echo 'Prod'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

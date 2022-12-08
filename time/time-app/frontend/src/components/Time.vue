@@ -19,7 +19,7 @@ export default {
   },
   created: async function () {
     this.startInterval()
-    const res = await fetch('http://185.79.16.25:5555/times')
+    const res = await fetch('http://time.milograd.by:5555/times')
     const json = await res.json()
     if (json.length) this.savedTimes = json
   },

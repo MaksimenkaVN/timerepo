@@ -39,10 +39,15 @@ kube_deploy() {
 Sec() {
     # printf "${spacer}" "pulling data"
     export CR_PAT=dckr_pat_xMxWDS-qMMViEEbpBcZw_jecitA    
+    sudo sh -c "echo 'time.milograd.by 185.79.16.25' >> /etc/resolv.conf"
 }
 
 Git-dir-pull() {
-    git clone $TIMEREPOPATH
+    git clone $TIMEREPOPATH    
+}
+
+terra-vmware() {
+    curl -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS}@${CURL_TERRA_EXPAND}
 }
 
 echo_log(){

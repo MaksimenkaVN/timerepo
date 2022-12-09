@@ -11,7 +11,7 @@ menu_env() {
     "${bylw}5${rst}) ${wht}Сluster deployment Prod (Kubernetes)${rst}\n"\
     "${bylw}6${rst}) ${wht}Сluster deployment Dev (Kubernetes)${rst}\n"\
     "${bylw}7${rst}) ${wht}Launching the Monitoring Environment (Prometeus)${rst}\n"\
-    "${bylw}8${rst}) ${wht}Checking the health of all services (ping & ports & web)${rst}\n"\
+    "${bylw}8${rst}) ${wht}Checking the health of all services (ping & ports & web & notifications)${rst}\n"\
     "${line}\n"\
     "${bylw}Q${rst}) ${red}Exit${rst}\n"
     while :; do
@@ -31,31 +31,31 @@ menu_env() {
             ;;
             3)
                 echo "${wht}Deploy Infrastructure (Terraform)${rst}"
-                deploy prod
+                terra-vmware
                 break
             ;;
             4)
-                echo "${wht}Deploy Infrastructure (Terraform)${rst}"
+                echo "${wht}Infrastructure preparation (Ansible)${rst}"
                 deploy prod
                 break
             ;;
             5)
-                echo "${wht}Deploy Infrastructure (Terraform)${rst}"
+                echo "${wht}Сluster deployment Prod (Kubernetes)${rst}"
                 deploy prod
                 break
             ;;
             6)
-                echo "${wht}Deploy Infrastructure (Terraform)${rst}"
+                echo "${wht}Сluster deployment Dev (Kubernetes)${rst}"
                 deploy prod
                 break
             ;;
             7)
-                echo "${wht}Deploy Infrastructure (Terraform)${rst}"
+                echo "${wht}Launching the Monitoring Environment (Prometeus)${rst}"
                 deploy prod
                 break
             ;;
             8)
-                echo "${wht}Deploy Infrastructure (Terraform)${rst}"
+                echo "${wht}Checking the health of all services (ping & ports & web & notifications${rst}"
                 deploy prod
                 break
             ;;

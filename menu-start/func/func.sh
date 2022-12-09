@@ -47,7 +47,7 @@ Git-dir-pull() {
 }
 
 terra-vmware() {
-    curl -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS}@${CURL_TERRA_EXPAND}
+    curl -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS}@${CURL_TERRA_EXPAND}build?token=${MAXAPI_JENKINS_TOKEN_NAME}
 }
 
 echo_log(){

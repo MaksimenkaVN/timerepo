@@ -1,0 +1,4 @@
+--- Start LOG
+--- 20221209-1129 :: Begin deployment. (NS: dev, TAG: 1.0) ---
+--- Deploying: mysql
+./func/func.sh: line 36: kubectl: command not found

@@ -1,2 +1,2 @@
 # Dyplom Vasiliy Maksimenka
-Dev Default feature/3
+Dev Default feature/3 correct

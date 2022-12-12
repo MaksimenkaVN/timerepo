@@ -1,2 +1,2 @@
 # Dyplom Vasiliy Maksimenka
-Dev Default
+Dev Default v2.0

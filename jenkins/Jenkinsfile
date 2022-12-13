@@ -11,8 +11,8 @@ pipeline {
 //      id_buld = $BUILD_ID
         app_API = "maksimenkavn/time-app-api-dev"
         app_FRONT = "maksimenkavn/time-app-frontend-dev"
-        dockerImageTagAPI = "${dockerOwner}/${app_API}"
-        dockerImageTagFRONT = "${dockerOwner}/${app_FRONT}"
+        dockerImageTagAPI = "${app_API}"
+        dockerImageTagFRONT = "${app_FRONT}"
         dockerRemoveTag = "${dockerRegistry}/${dockerOwner}/${app}:${old_number}"
     }
 // docker stop maksimenkavn/time-app-frontend-dev           

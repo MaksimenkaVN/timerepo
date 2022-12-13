@@ -14,10 +14,7 @@ pipeline {
         dockerImageTagFRONT = "${app_FRONT}"
         dockerRemoveTag = "${dockerRegistry}/${dockerOwner}/${app}:${old_number}"
     }
-// docker stop maksimenkavn/time-app-frontend-dev           
-// docker stop maksimenkavn/time-app-api-dev
-// docker stop adminer
-// docker stop mysql
+
     stages {
         stage('Stop Services') {
             steps {

@@ -1,3 +1,6 @@
+import groovy.json.JsonSlurperClassic
+import Build
+
 pipeline {
     
     agent any
@@ -8,17 +11,22 @@ pipeline {
 //      id_buld = $BUILD_ID
         app_API = "maksimenkavn/time-app-api-dev"
         app_FRONT = "maksimenkavn/time-app-frontend-dev"
-        dockerImageTag = "${dockerRegistry}/${dockerOwner}/${app}:${env.BUILD_NUMBER}"
+        dockerImageTagAPI = "${dockerOwner}/${app_API}"
+        dockerImageTagFRONT = "${dockerOwner}/${app_FRONT}"
         dockerRemoveTag = "${dockerRegistry}/${dockerOwner}/${app}:${old_number}"
     }
 
     stages {
         stage('Stop Services') {
             steps {
-                sh """               
+                sh """    
+                docker stop maksimenkavn/time-app-frontend-dev           
+                docker stop maksimenkavn/time-app-api-dev
+                docker stop adminer
+                docker stop mysql
                 docker system prune -f                                
                 docker rmi -f ${app_API}
-                docker rmi -f ${app_FRONT}
+                docker rmi -f ${app_FRONT}             
                 """
             }
         }
@@ -45,28 +53,32 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo Test                
+                sh "echo Test"                
+            }
+        }        
+ 
+        stage('Push image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DockerHubCredentials', passwordVariable: 'pass', usernameVariable: 'maksimenkavn')]) {
+                    sh """echo ${pass} | docker login ${dockerRegistry} -u ${user} --password-stdin
+                    docker push ${dockerImageTagAPI}
+                    docker push ${dockerImageTagFRONT}
+                    """
+                }
             }
         }
-        //stage('Make image') {
-        //    environment {
-        //        appPath = "${path}/target/"
-        //    }
-        //    steps {
-        //        sh """                
-        //        docker rm -f ${app}
-        //        docker rmi -f ${app}
-        //        docker build -t ${dockerImageTag} -f ${path}/Dockerfile-make ${path}"""
-        //    }
-        //}
- //       stage('Push image') {
- //           steps {
- //               withCredentials([usernamePassword(credentialsId: 'github-https', passwordVariable: 'pass', usernameVariable: 'user')]) {
- //                   sh """echo ${pass} | docker login ${dockerRegistry} -u ${user} --password-stdin
- //                   docker push ${dockerImageTag}"""
- //               }
- //           }
- //       }
+
+        stage('Start Services') {
+            steps {
+                sh """
+                  ls -la
+                  pwd
+                  echo "Build# $BUILD_ID"
+                  docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+                """
+            }
+        }
+
     }
     post {
         always {

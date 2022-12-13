@@ -19,6 +19,8 @@ pipeline {
         stage('Stop Services') {
             steps {
                 sh """
+                docker stop time-app_frontend_1
+                docker stop time-app_api_1
                 docker system prune -f                                
                 docker rmi -f ${app_API}
                 docker rmi -f ${app_FRONT}             

@@ -18,7 +18,7 @@ async function saveTime() {
   const json = await res.json()
   if (json.insertId) {
     this.savedTimes.unshift({ id: json.insertId, time })
-    this.$toast.success(`Время docker ${time} сохранено`, { position: 'top-right' })
+    this.$toast.success(`Время ${time} сохранено`, { position: 'top-right' })
   }
 }
 

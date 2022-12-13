@@ -58,7 +58,7 @@ pipeline {
         stage('Push image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHubCredentials', passwordVariable: 'pass', usernameVariable: 'maksimenkavn')]) {
-                    sh """echo ${pass} | docker login ${dockerRegistry} -u ${dockerOwner} --password-stdin
+                    sh """echo ${pass} | docker login -u ${dockerOwner} --password-stdin
                     docker push ${dockerImageTagAPI}
                     docker push ${dockerImageTagFRONT}
                     """
@@ -68,9 +68,7 @@ pipeline {
 
         stage('Start Services') {
             steps {
-                sh """
-                  ls -la
-                  pwd
+                sh """                  
                   echo "Build# $BUILD_ID"
                   docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
                 """

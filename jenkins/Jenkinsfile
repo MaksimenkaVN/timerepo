@@ -16,12 +16,12 @@ pipeline {
     }
 // docker stop maksimenkavn/time-app-frontend-dev           
 // docker stop maksimenkavn/time-app-api-dev
+// docker stop adminer
+// docker stop mysql
     stages {
         stage('Stop Services') {
             steps {
-                sh """       
-                docker stop adminer
-                docker stop mysql
+                sh """
                 docker system prune -f                                
                 docker rmi -f ${app_API}
                 docker rmi -f ${app_FRONT}             

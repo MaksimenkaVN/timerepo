@@ -5,7 +5,7 @@ pipeline {
     environment {
         dockerRegistry = "ghcr.io"
         dockerOwner = "maksimenkavn"        
-        id_buld = $BUILD_ID
+//      id_buld = $BUILD_ID
         app_API = "maksimenkavn/time-app-api-dev"
         app_FRONT = "maksimenkavn/time-app-frontend-dev"
         dockerImageTag = "${dockerRegistry}/${dockerOwner}/${app}:${env.BUILD_NUMBER}"

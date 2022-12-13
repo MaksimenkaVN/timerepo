@@ -1,0 +1,120 @@
+// @Library('shared_library') _
+import groovy.json.JsonSlurperClassic
+import Build
+
+pipeline {
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+        disableConcurrentBuilds()
+        timestamps()
+        ansiColor('xterm')
+    }
+    // parameters {
+    //     choice choices: ['master', 'slave', 'docker_build'], description: 'Select agent', name: 'agent'
+    // }
+    // agent {
+    //     label "master"
+    // }
+    
+    agent any
+
+    stages {
+        stage ('Prepare') {
+            steps {
+                script {
+                    apps_remove_list = []
+                    builder = new Build()
+                    printLog.info (env.CHANGE_ID)
+                    PR_ID = getPrID(env.BRANCH_NAME)
+                    requestURL = "http://gitea:3000/api/v1/repos/root/simple-app-project/pulls/${PR_ID}.diff"
+                    withCredentials([usernamePassword(credentialsId: 'gitea-http', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                         auth = "${user}:${pass}".bytes.encodeBase64().toString()
+                    }
+                    PR_DIFF_SRC = httpRequest.get(requestURL: requestURL, auth: auth)
+                    PR_DIFF_SRC.split('\n').each { line ->
+                        if (line.startsWith('diff --git')) {
+                            diffLine = line.substring(line.indexOf('a/')+2, line.indexOf(' b/'))
+                            builder.prDiff.add(diffLine)
+                        }
+                    }
+                    printLog.info builder.prDiff
+
+                    Integer parallelExecute = 2
+                    json = readFile "time/services.json"
+                    apps = new JsonSlurperClassic().parseText(json)
+                    dockerRegistry = "ghcr.io"
+                    dockerOwner = "maksimenkavn"
+
+                    apps.each { app ->
+                        if (!isCanged(builder.prDiff, app.value.path)) {
+                            apps_remove_list.add(app.key)
+                        }
+                    }
+
+                    apps_remove_list.each { app ->
+                        apps.remove(app)
+                    }
+
+                    builder.appsForBuild = apps
+                    buildStages = stagePrepare(builder.appsForBuild, parallelExecute)
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    buildStages.each { build ->
+                        parallel build
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    // builder.appsForBuild.keySet().each { app ->
+                    //    sh "docker run ${app} mvn test"
+                       sh '''                                       
+                       echo "Test# $BUILD_ID"
+                       '''
+                    }
+                }
+            }
+        }
+        stage('Create image') {
+            when { expression { env.BRANCH_NAME == "Prod" || env.BRANCH_NAME == "Dev" } } 
+            steps {
+                script {
+                    builder.appsForBuild.each { app, value ->
+                        dir("${value.path}") {
+                            sh """                            
+                            docker rm -f ${app}
+                            docker rmi -f ${app}
+                            docker build -t ${dockerRegistry}/${dockerOwner}/${app}:${env.BUILD_NUMBER} -f docker-compose-pub.yml .
+                            """
+                        }
+                    }
+                }
+            }
+        }
+        stage('Push image') {
+            when { expression { env.BRANCH_NAME == "Prod" || env.BRANCH_NAME == "Dev" } } 
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'github-https', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                        sh "echo ${pass} | docker login ${dockerRegistry} -u ${user} --password-stdin"
+                    }
+                    builder.appsForBuild.keySet().each { app ->
+                        sh """docker push ${dockerRegistry}/${dockerOwner}/${app}:${env.BUILD_NUMBER}
+                        docker rmi -f ${dockerRegistry}/${dockerOwner}/${app}:${env.BUILD_NUMBER}"""
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

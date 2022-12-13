@@ -1,0 +1,4 @@
+{
+    "time-app-api-dev": {"path": "time-app/api"},
+    "time-app-frontend-dev": {"path": "time-app/frontend"}    
+}

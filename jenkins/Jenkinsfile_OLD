@@ -1,0 +1,30 @@
+pipeline {
+//    options {
+//        buildDiscarder(logRotator(numToKeepStr: '3'))
+//    }
+//    parameters {
+//        choice choices: ['slave', 'master', 'docker_build'], description: 'Select agent', name: 'agent'
+//    }
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+//                dir('apps/hello-world-app') {
+//                    sh "mvn -B -DskipTests clean package"
+//               }
+                sh '''                
+                  ls -la
+                  pwd
+                  echo "Build# $BUILD_ID"
+                  docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+                '''
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

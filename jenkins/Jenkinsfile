@@ -58,7 +58,7 @@ pipeline {
         stage('Push image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerHubCredentials', passwordVariable: 'pass', usernameVariable: 'maksimenkavn')]) {
-                    sh """echo ${pass} | docker login ${dockerRegistry} -u ${user} --password-stdin
+                    sh """echo ${pass} | docker login ${dockerRegistry} -u ${dockerOwner} --password-stdin
                     docker push ${dockerImageTagAPI}
                     docker push ${dockerImageTagFRONT}
                     """

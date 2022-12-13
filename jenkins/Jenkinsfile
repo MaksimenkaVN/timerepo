@@ -7,6 +7,7 @@ pipeline {
     environment {
         dockerRegistry = "ghcr.io"
         dockerOwner = "maksimenkavn"        
+        pass = "@ugust1975"
 //      id_buld = $BUILD_ID
         app_API = "maksimenkavn/time-app-api-dev"
         app_FRONT = "maksimenkavn/time-app-frontend-dev"
@@ -57,7 +58,7 @@ pipeline {
  
         stage('Push image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DockerHubCredentials', passwordVariable: 'pass', usernameVariable: 'maksimenkavn')]) {
+                // withCredentials([usernamePassword(credentialsId: 'DockerHubCredentials', passwordVariable: 'pass', usernameVariable: 'maksimenkavn')]) {
                     sh """echo ${pass} | docker login -u ${dockerOwner} --password-stdin
                     docker push ${dockerImageTagAPI}
                     docker push ${dockerImageTagFRONT}

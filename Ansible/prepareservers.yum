@@ -4,5 +4,47 @@
   remote_user: vasiliy
 
   tasks:  
-  - name: "test"
-    shell: echo TEST
+  - name:  "Update"
+    shell: |
+      sudo apt update -y
+
+  - name:  "Install Docker and start service"
+    shell: |
+      sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" -y
+      sudo apt update -y
+      apt-cache policy docker-ce -y
+      sudo apt install docker-ce -y
+      systemctl start docker
+      systemctl enable docker
+
+  - name: "Usermod for docker"
+    shell: |
+      sudo usermod -aG docker vasiliy
+      sudo apt update -y
+
+  - name: "Install Minikube"
+    shell: |
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+      sudo dpkg -i minikube_latest_amd64.deb -y
+      sudo apt update -y
+
+  - name: "Install kubectl"
+    shell: |            
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+      sudo apt update -y
+      sudo apt install kubectl
+
+  - name: "Start Minikube"
+    shell: |
+      sudo minikube start --force
+
+  - name: "Start PODS"
+    shell: |
+      sudo docker login -u maksimenkavn -p @ugust1975
+      sudo kubectl run timefrontend --image=maksimenkavn/time-app-frontend-dev --port=3000
+      sudo kubectl run timeapi --image=maksimenkavn/time-app-api-dev --port=5555
+      sudo kubectl run adminer --image=adminer --port=8888
+      sudo kubectl run mysql --image=mysql

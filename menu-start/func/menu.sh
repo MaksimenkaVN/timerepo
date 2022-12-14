@@ -36,7 +36,7 @@ menu_env() {
             ;;
             4)
                 echo "${wht}Infrastructure preparation (Ansible)${rst}"
-                deploy Ansible-preparation
+                Ansible-preparation
                 break
             ;;
             5)

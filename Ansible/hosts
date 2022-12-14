@@ -1,0 +1,6 @@
+[app:vars]
+ansible_ssh_pass=@Ugust75
+ansible_ssh_user=vasiliy
+
+[app]
+192.168.129.94 ansible_connection=ssh ansible_ssh_user=vasiliy ansible_ssh_pass=@Ugust75 ansible_sudo_pass=@Ugust75

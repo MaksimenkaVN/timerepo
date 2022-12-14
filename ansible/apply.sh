@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cd Ansible/
+cd ansible/
 sudo ansible-playbook prepareservers.yum

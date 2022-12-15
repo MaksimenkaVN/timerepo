@@ -44,3 +44,10 @@
   - name: "Docker login"
     shell: |
       sudo docker login -u maksimenkavn -p @ugust1975
+
+  - name: "PODS create"
+    shell: |
+      sudo kubectl run timefrontend --image=maksimenkavn/time-app-frontend-dev --port=3000
+      sudo kubectl run timeapi --image=maksimenkavn/time-app-api-dev --port=5555
+      sudo kubectl run adminer --image=adminer --port=8888
+      sudo kubectl run mysql --image=mysql

@@ -1,0 +1,239 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post_db
+  namespace: default
+  labels:
+    app: post_db
+spec:
+  selector:
+    matchLabels:
+      app: post_db
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: post_db
+    spec:
+      containers:
+      - name: post_db
+        image: mongo:3.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+        - name: post_db
+          mountPath: /data/db
+      volumes:
+        - name: post_db
+          hostPath:
+            path: /tmp/post_db
+      restartPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: post_db
+  namespace: default
+spec:
+  selector:
+    app: post_db
+  type: ClusterIP
+  ports:
+  - name: myjob
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: default
+  labels:
+    app: ui
+spec:
+  selector:
+    matchLabels:
+      app: ui
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - name: ui
+        image: ghcr.io/dos09-onl/ui:logging
+        envFrom:
+        - configMapRef:
+            name: ui
+        ports:
+        - containerPort: 9292
+          name: ui
+      restartPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: default
+spec:
+  selector:
+    app: ui
+  type: ClusterIP
+  ports:
+  - name: ui
+    protocol: TCP
+    port: 9292
+    targetPort: 9292
+---
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ui
+  namespace: default
+data:
+  POST_SERVICE_HOST: post.default.svc.cluster.local
+  POST_SERVICE_PORT: '5000'
+  COMMENT_SERVICE_HOST: comment.default.svc.cluster.local
+  COMMENT_SERVICE_PORT: '9292'
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment
+  namespace: default
+  labels:
+    app: comment
+spec:
+  selector:
+    matchLabels:
+      app: comment
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: comment
+    spec:
+      containers:
+      - name: comment
+        image: ghcr.io/dos09-onl/comment:logging
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: comment
+        ports:
+        - containerPort: 9292
+          name: comment
+      restartPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: comment
+  namespace: default
+spec:
+  selector:
+    app: comment
+  type: ClusterIP
+  ports:
+  - name: comment
+    protocol: TCP
+    port: 9292
+    targetPort: 9292
+---
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: comment
+  namespace: default
+data:
+  COMMENT_DATABASE_HOST: post_db.default.svc.cluster.local
+  COMMENT_DATABASE: comments
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post
+  namespace: default
+  labels:
+    app: post
+spec:
+  selector:
+    matchLabels:
+      app: post
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: post
+    spec:
+      containers:
+      - name: post
+        image: ghcr.io/dos09-onl/post:logging
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: post
+        ports:
+        - containerPort: 5000
+          name: post
+      restartPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: post
+  namespace: default
+spec:
+  selector:
+    app: post
+  type: ClusterIP
+  ports:
+  - name: post
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
+---
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: post
+  namespace: default
+data:
+  POST_DATABASE_HOST: post_db.default.svc.cluster.local
+  POST_DATABASE: posts
+---

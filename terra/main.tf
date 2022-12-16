@@ -66,6 +66,8 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
         }
         dns_server_list     = ["192.168.129.26", "192.168.129.17"]
         network_interface {
+          network_id = "${data.vsphere_network.network.id}"
+          adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
           ipv4_address = "192.168.129.94"
           ipv4_netmask = 24
         }

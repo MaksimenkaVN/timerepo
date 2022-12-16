@@ -3,7 +3,6 @@
   become: true
   remote_user: vasiliy
 
-  tasks:  
   - name:  "Update"
     shell: |
       sudo apt update -y

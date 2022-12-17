@@ -52,4 +52,5 @@
 
   - name: "Deploy images for app"
     shell: |
-      sudo docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+      git clone https://github.com/MaksimenkaVN/timerepo.git
+      sudo docker-compose -f /home/vasiliy/timerepo/time/time-app/docker-compose-pub.yml up -d

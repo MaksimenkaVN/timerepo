@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: post_db
+  name: time_app_mysql_1
   namespace: default
   labels:
-    app: post_db
+    app: time_app_mysql_1
 spec:
   selector:
     matchLabels:
-      app: post_db
-  replicas: 1
+      app: time_app_mysql_1
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -19,53 +19,53 @@ spec:
   template:
     metadata:
       labels:
-        app: post_db
+        app: time_app_mysql_1
     spec:
       containers:
-      - name: post_db
-        image: mongo:3.2
+      - name: time_app_mysql_1
+        image: mysql
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 27017
-          name: mongo
+        - containerPort: 3306, 33060
+          name: mysql
         volumeMounts:
-        - name: post_db
-          mountPath: /data/db
+        - name: time-app_mysql_data_pub
+          mountPath: /var/lib/mysql
       volumes:
-        - name: post_db
+        - name: time-app_mysql_data_pub
           hostPath:
-            path: /tmp/post_db
+            path: /tmp/mysql
       restartPolicy: Always
 ---
 # https://kubernetes.io/docs/concepts/services-networking/service/
 apiVersion: v1
 kind: Service
 metadata:
-  name: post_db
+  name: mysql
   namespace: default
 spec:
   selector:
-    app: post_db
+    app: mysql
   type: ClusterIP
   ports:
-  - name: myjob
+  - name: mysql
     protocol: TCP
-    port: 27017
-    targetPort: 27017
+    port: 3306
+    targetPort: 3306
 ---
 # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ui
+  name: time-app_frontend_1
   namespace: default
   labels:
-    app: ui
+    app: time-app_frontend_1
 spec:
   selector:
     matchLabels:
-      app: ui
-  replicas: 1
+      app: time-app_frontend_1
+  replicas: 2
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -74,59 +74,57 @@ spec:
   template:
     metadata:
       labels:
-        app: ui
+        app: time-app_frontend_1
     spec:
       containers:
-      - name: ui
-        image: ghcr.io/dos09-onl/ui:logging
+      - name: time-app_frontend_1
+        image: maksimenkavn/time-app-frontend-dev
         envFrom:
         - configMapRef:
-            name: ui
+            name: time-app_frontend_1
         ports:
-        - containerPort: 9292
-          name: ui
+        - containerPort: 3000
+          name: time-app_frontend_1
       restartPolicy: Always
 ---
 # https://kubernetes.io/docs/concepts/services-networking/service/
 apiVersion: v1
 kind: Service
 metadata:
-  name: ui
+  name: time-app_frontend_1
   namespace: default
 spec:
   selector:
-    app: ui
+    app: time-app_frontend_1
   type: ClusterIP
   ports:
-  - name: ui
+  - name: time-app_frontend_1
     protocol: TCP
-    port: 9292
-    targetPort: 9292
+    port: 3000
+    targetPort: 3000
 ---
 # https://kubernetes.io/docs/concepts/configuration/configmap/
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: ui
+  name: time-app_frontend_1
   namespace: default
 data:
-  POST_SERVICE_HOST: post.default.svc.cluster.local
-  POST_SERVICE_PORT: '5000'
-  COMMENT_SERVICE_HOST: comment.default.svc.cluster.local
-  COMMENT_SERVICE_PORT: '9292'
+# POST_SERVICE_HOST: post.default.svc.cluster.local
+  POST_SERVICE_PORT: '3000'  
 ---
 # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: comment
+  name: time-app_api_1
   namespace: default
   labels:
-    app: comment
+    app: time-app_api_1
 spec:
   selector:
     matchLabels:
-      app: comment
+      app: time-app_api_1
   replicas: 1
   strategy:
     rollingUpdate:
@@ -136,104 +134,91 @@ spec:
   template:
     metadata:
       labels:
-        app: comment
+        app: time-app_api_1
     spec:
       containers:
-      - name: comment
-        image: ghcr.io/dos09-onl/comment:logging
+      - name: time-app_api_1
+        image: maksimenkavn/time-app-api-dev
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
-            name: comment
-        ports:
-        - containerPort: 9292
-          name: comment
-      restartPolicy: Always
----
-# https://kubernetes.io/docs/concepts/services-networking/service/
-apiVersion: v1
-kind: Service
-metadata:
-  name: comment
-  namespace: default
-spec:
-  selector:
-    app: comment
-  type: ClusterIP
-  ports:
-  - name: comment
-    protocol: TCP
-    port: 9292
-    targetPort: 9292
----
-# https://kubernetes.io/docs/concepts/configuration/configmap/
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: comment
-  namespace: default
-data:
-  COMMENT_DATABASE_HOST: post_db.default.svc.cluster.local
-  COMMENT_DATABASE: comments
----
-# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: post
-  namespace: default
-  labels:
-    app: post
-spec:
-  selector:
-    matchLabels:
-      app: post
-  replicas: 1
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: post
-    spec:
-      containers:
-      - name: post
-        image: ghcr.io/dos09-onl/post:logging
-        imagePullPolicy: IfNotPresent
-        envFrom:
-        - configMapRef:
-            name: post
+            name: time-app_api_1
         ports:
         - containerPort: 5000
-          name: post
+          name: time-app_api_1
       restartPolicy: Always
 ---
 # https://kubernetes.io/docs/concepts/services-networking/service/
 apiVersion: v1
 kind: Service
 metadata:
-  name: post
+  name: time-app_api_1
   namespace: default
 spec:
   selector:
-    app: post
+    app: time-app_api_1
   type: ClusterIP
   ports:
-  - name: post
+  - name: time-app_api_1
     protocol: TCP
-    port: 5000
+    port: 5555
     targetPort: 5000
 ---
 # https://kubernetes.io/docs/concepts/configuration/configmap/
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: post
+  name: time-app_api_1
   namespace: default
 data:
-  POST_DATABASE_HOST: post_db.default.svc.cluster.local
-  POST_DATABASE: posts
+# COMMENT_DATABASE_HOST: post_db.default.svc.cluster.local
+# COMMENT_DATABASE: time-app_api_1
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-app_adminer_1
+  namespace: default
+  labels:
+    app: time-app_adminer_1
+spec:
+  selector:
+    matchLabels:
+      app: time-app_adminer_1
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: time-app_adminer_1
+    spec:
+      containers:
+      - name: time-app_adminer_1
+        image: adminer
+        imagePullPolicy: IfNotPresent        
+        ports:
+        - containerPort: 8080
+          name: time-app_adminer_1
+      restartPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-app_adminer_1
+  namespace: default
+spec:
+  selector:
+    app: time-app_adminer_1
+  type: ClusterIP
+  ports:
+  - name: time-app_adminer_1
+    protocol: TCP
+    port: 8888
+    targetPort: 8080
 ---

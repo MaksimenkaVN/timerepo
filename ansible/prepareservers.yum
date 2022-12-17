@@ -44,3 +44,12 @@
   - name: "Docker login"
     shell: |
       sudo docker login -u maksimenkavn -p @ugust1975
+
+  - name: "Install Docker-compose"
+    shell: |
+      sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      sudo chmod +x /usr/local/bin/docker-compose
+
+  - name: "Deploy images for app"
+    shell: |
+      sudo docker-compose -f ./time/time-app/docker-compose-pub.yml up -d

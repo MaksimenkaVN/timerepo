@@ -2,9 +2,7 @@ import groovy.json.JsonSlurperClassic
 
 pipeline {
     
-    agent {
-        label "Dev"
-    }
+    agent any
     
     environment {
         dockerRegistry = "ghcr.io"
@@ -65,12 +63,13 @@ pipeline {
                 """                
             }
         }
-                
+        
+        // docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
         stage('Start Services') {
             steps {
                 sh """                  
-                  echo "Build# $BUILD_ID"                  
-                  docker-compose -f ./time/time-app/docker-compose-pub.yml up -d
+                  echo "Build# $BUILD_ID"
+                  curl -I -X POST http://Vasiliy:1193de5d752a4422f8a93462f0e675a218@jenkins.milograd.by:8080/job/Preparation%20Servers/build
                 """
             }
         }

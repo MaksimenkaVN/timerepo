@@ -50,7 +50,7 @@
       sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
       sudo chmod +x /usr/local/bin/docker-compose
 
-  - name: "Deploy images for app"
+  - name: "Deploy Java for agent Jenkins"
     shell: |
-      git clone https://github.com/MaksimenkaVN/timerepo.git
-      sudo docker-compose -f /home/vasiliy/timerepo/time/time-app/docker-compose-pub.yml up -d
+      sudo apt install default-jre -y
+      sudo apt install default-jdk -y      

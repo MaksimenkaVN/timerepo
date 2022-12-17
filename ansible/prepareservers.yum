@@ -54,3 +54,8 @@
     shell: |
       sudo apt install default-jre -y
       sudo apt install default-jdk -y      
+  
+  - name: "Deploy applications"
+    shell: |
+      git clone https://github.com/MaksimenkaVN/timerepo.git
+      docker-compose -f /home/vasiliy/timerepo/time/time-app/docker-compose-pub.yml up -d

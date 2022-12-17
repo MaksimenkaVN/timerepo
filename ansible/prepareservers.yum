@@ -37,10 +37,6 @@
       sudo apt update -y
       sudo apt install kubectl
 
-  - name: "Start Minikube"
-    shell: |
-      sudo minikube start --force
-
   - name: "Docker login"
     shell: |
       sudo docker login -u maksimenkavn -p @ugust1975

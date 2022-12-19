@@ -1,13 +1,13 @@
 [app:vars]
-ansible_ssh_pass=@Ugust75
-ansible_ssh_user=vasiliy
+ansible_ssh_pass=
+ansible_ssh_user=
 
 [vmware:vars]
-ansible_ssh_pass=@Ugust75
-ansible_ssh_user=root
+ansible_ssh_pass=
+ansible_ssh_user=
 
 [app]
-192.168.129.94 ansible_connection=ssh ansible_ssh_user=vasiliy ansible_ssh_pass=@Ugust75 ansible_sudo_pass=@Ugust75
+192.168.129.94 ansible_connection=ssh ansible_ssh_user= ansible_ssh_pass= ansible_sudo_pass=
 
 [vmware]
-192.168.129.27 ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=@Ugust75 ansible_sudo_pass=@Ugust75
+192.168.129.27 ansible_connection=ssh ansible_ssh_user= ansible_ssh_pass= ansible_sudo_pass=

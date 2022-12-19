@@ -9,7 +9,7 @@ pipeline {
     environment {
         dockerRegistry = "ghcr.io"
         dockerOwner = "maksimenkavn"        
-        pass = "@ugust1975"
+        pass = ""
         app_API = "maksimenkavn/time-app-api-dev"
         app_FRONT = "maksimenkavn/time-app-frontend-dev"
         dockerImageTagAPI = "${app_API}"

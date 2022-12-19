@@ -10,19 +10,19 @@ scrape_configs:
   - job_name: 'adminer'
     static_configs:
       - targets:
-        - 'time-app_adminer_1:8080'
+        - 'localhost:8080'
   - job_name: 'api'
     static_configs:
       - targets:
-        - 'time-app_api_1:5000'
+        - 'localhost:5000'
   - job_name: 'frontend'
     static_configs:
       - targets:
-        - 'time-app_frontend_1:3000'
+        - 'localhost:3000'
   - job_name: 'mysql-3306'
     static_configs:
     - targets:
-      - 'time-app_mysql_1:3306'
+      - 'localhost:3306'
   - job_name: 'node'
     static_configs:
     - targets:
@@ -30,7 +30,7 @@ scrape_configs:
   - job_name: 'mysql-33060'
     static_configs:
     - targets:
-      - 'time-app_mysql_1:33060'
+      - 'localhost:33060'
   - job_name: 'docker'
     static_configs:
     - targets:

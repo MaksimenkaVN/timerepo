@@ -1,0 +1,37 @@
+---
+global:
+  scrape_interval: '5s'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets:
+        - 'localhost:9090'
+  - job_name: 'adminer'
+    static_configs:
+      - targets:
+        - 'time-app_adminer_1:8080'
+  - job_name: 'api'
+    static_configs:
+      - targets:
+        - 'time-app_api_1:5000'
+  - job_name: 'frontend'
+    static_configs:
+      - targets:
+        - 'time-app_frontend_1:3000'
+  - job_name: 'mysql-3306'
+    static_configs:
+    - targets:
+      - 'time-app_mysql_1:3306'
+  - job_name: 'node'
+    static_configs:
+    - targets:
+      - 'node-exporter:9100'
+  - job_name: 'mysql-33060'
+    static_configs:
+    - targets:
+      - 'time-app_mysql_1:33060'
+  - job_name: 'docker'
+    static_configs:
+    - targets:
+      - 'localhost:9323'

@@ -54,6 +54,14 @@ terra-vmware() {
     curl -I -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS_TOKEN}@${CURL_TERRA_EXPAND}
 }
 
+monitor() {
+    echo $API_JENKINS_USER
+    echo $MAXAPI_JENKINS_TOKEN
+    echo $CURL_MONITOR_EXPAND
+    echo $MAXAPI_JENKINS_TOKEN_NAME    
+    curl -I -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS_TOKEN}@${CURL_MONITOR_EXPAND}
+}
+
 Ansible-preparation() {
     echo $API_JENKINS_USER
     echo $MAXAPI_JENKINS_TOKEN

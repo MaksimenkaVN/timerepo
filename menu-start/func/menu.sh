@@ -51,7 +51,7 @@ menu_env() {
             ;;
             7)
                 echo "${wht}Launching the Monitoring Environment (Prometeus)${rst}"
-                deploy prod
+                deploy monitor
                 break
             ;;
             8)

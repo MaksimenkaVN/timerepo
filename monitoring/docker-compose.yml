@@ -14,9 +14,7 @@ services:
       - 9090:9090
     restart: unless-stopped
     environment:
-      TZ: "Europe/Moscow"
-    networks:
-      - time-app_default
+      TZ: "Europe/Moscow"    
 
   grafana:
     image: grafana/grafana
@@ -32,9 +30,7 @@ services:
     hostname: grafana
     restart: unless-stopped
     environment:
-      TZ: "Europe/Moscow"
-    networks:
-      - time-app_default
+      TZ: "Europe/Moscow"    
 
   node-exporter:
     image: prom/node-exporter
@@ -54,5 +50,3 @@ services:
     restart: unless-stopped
     environment:
       TZ: "Europe/Moscow"
-    networks:
-      - time-app_default

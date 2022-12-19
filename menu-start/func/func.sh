@@ -70,6 +70,10 @@ Ansible-preparation() {
     curl -I -X POST http://${API_JENKINS_USER}:${MAXAPI_JENKINS_TOKEN}@${CURL_ANSIBLE_EXPAND}
 }
 
+ping-test() {
+    ping 192.168.129.94
+}
+
 echo_log(){
     echo ${line}${bcyn}
     cat "${LOGFILE}" | tail -n 3

@@ -41,22 +41,22 @@ menu_env() {
             ;;
             5)
                 echo "${wht}Сluster deployment Prod (Kubernetes)${rst}"
-                deploy prod
+                Kubernet-Prod
                 break
             ;;
             6)
                 echo "${wht}Сluster deployment Dev (Kubernetes)${rst}"
-                deploy prod
+                Kubernet-Dev
                 break
             ;;
             7)
                 echo "${wht}Launching the Monitoring Environment (Prometeus)${rst}"
-                deploy monitor
+                monitor
                 break
             ;;
             8)
                 echo "${wht}Checking the health of all services (ping & ports & web & notifications${rst}"
-                deploy prod
+                ping-test
                 break
             ;;
             q|Q)

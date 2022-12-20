@@ -43,4 +43,4 @@
 
   - name: "Docker login"
     shell: |
-      sudo docker login -u maksimenkavn -p @ugust1975
+      sudo docker login -u maksimenkavn -p 

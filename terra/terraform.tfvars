@@ -1,6 +1,6 @@
-vsphere_user = "Administrator@vsphere.local"
+vsphere_user = ""
 vsphere_password = ""
-vsphere_server = "192.168.129.27"
+vsphere_server = ""
 vsphere_datacenter = "main"
 vsphere_datastore = "nfs-fm2"
 vsphere_resource_pool = "prod"

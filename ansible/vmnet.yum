@@ -6,9 +6,9 @@
   tasks:  
   - name: change network adapter to connect on vm01
     community.vmware.vmware_guest_network:
-      hostname: 192.168.129.27
-      username: Administrator@vsphere.local
-      password: August-1975
+      hostname: 
+      username: 
+      password: 
       datacenter: main
       name: Kuber
       mac_address: 00:50:56:bc:15:6b
@@ -18,9 +18,9 @@
 
   - name: Set the state of a virtual machine to poweron using MoID
     community.vmware.vmware_guest_powerstate:
-      hostname: 192.168.129.27
-      username: Administrator@vsphere.local
-      password: August-1975
+      hostname: 
+      username: 
+      password: 
       datacenter: main
       name: Kuber
       folder: "main/lab/vm"
